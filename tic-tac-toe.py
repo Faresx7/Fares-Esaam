@@ -1,4 +1,3 @@
-import random
 import os
 #!this method help me to clear screen for better coding
 def clearscreen():
@@ -183,7 +182,5 @@ class game:
             self.cplayer=1
         else:
             self.cplayer=0
-
-
 g=game()
 g.startgame()
