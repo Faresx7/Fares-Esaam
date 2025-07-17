@@ -99,48 +99,54 @@ class game:
             self.quit()
 
     def play(self):
+        attempt=3
         while True:
             turn = self.player[self.cplayer]
             self.board.board_display()
             print(f"{turn.name.capitalize()}'s turn\nEnter position")
             #! this condition for check that the position is valid
             # todo i need to make condition to make there is only 3 attempts in wrong position
+            
             while True:
-                try:
-                    pos = int(input())
-                    #! check this position available or not
-                    if self.board.update_board(pos, turn.symbol):
-                    #! if True we continue normally
-                        break                         
-                    else:
+                while attempt >0:
+                    try:
+                        pos = int(input())
+                        #! check this position available or not
+                        if self.board.update_board(pos, turn.symbol):
+                            #! if True we continue normally
+                            break                         
+                        else:
+                            clearscreen()
+                            self.board.board_display()
+                            print("Position already taken, choose another position")
+                
+                        #! the except work if we enterd wrong input like letter or number not between (1-9)
+                    except:
+                            print(f"Invalid input. Please enter a number from 1 to 9\nYou have {attempt} attempt left")
+                            attempt-=1
+                    if attempt==0:
+                        print("Restart game")
+                        self.restart()
+
+                    if self.win():
                         clearscreen()
                         self.board.board_display()
-                        print("Position already taken, choose another position")
-                
-                    #! the except work if we enterd wrong input like letter or number not between (1-9)
-                except:
-                    
-                    print("Invalid input. Please enter a number from 1 to 9")
-
-            if self.win():
-                clearscreen()
-                self.board.board_display()
-                print(f"{turn.name.capitalize()} wins! 🎉")
-                if self.menu.end_game_menu()==1:
-                        self.restart()
-                else:
-                    self.quit()
-                    break
-            elif self.draw():
-                    clearscreen()
-                    self.board.board_display()
-                    print("Draw , No one wins")
-                    # self.menu.end_game_menu()
+                        print(f"{turn.name.capitalize()} wins! 🎉")
                     if self.menu.end_game_menu()==1:
                         self.restart()
                     else:
                         self.quit()
-                    break
+                        break
+                    if self.draw():
+                        clearscreen()
+                        self.board.board_display()
+                        print("Draw , No one wins")
+                        # self.menu.end_game_menu()
+                        if self.menu.end_game_menu()==1:
+                            self.restart()
+                        else:
+                            self.quit()
+                        break
             self.switch()
             clearscreen()
         
