@@ -19,7 +19,7 @@ class player:
                 # print("correct")
                 break
     def csymbol(self):
-        print(f"Player {self.name}")
+        print(f"{self.name.capitalize()} Choose (X-O)")
         while True:
             print("X or O")
             ch=input()
@@ -81,14 +81,19 @@ class game:
     def startgame(self):
         clearscreen()
         ch=self.menu.main_menu()
+        first=0
         if ch ==1 :
             #the name and symbol 
             #! enumerate for indexing 
             for index,i in enumerate(self.player,1):
-                print(f"Player {index} Name")
+                print(f"Player {index}, Enter your name:")
                 i.cname()
-                i.csymbol()
+                # to give the second player his symbol automatically
+                if first==0:
+                    i.csymbol()
+                first=1
                 clearscreen()
+            self.player[1].symbol='O' if self.player[0].symbol=='X' else 'X'
             self.play()
         else:
             self.quit()
@@ -106,8 +111,7 @@ class game:
                     #! check this position available or not
                     if self.board.update_board(pos, turn.symbol):
                     #! if True we continue normally
-                        break  
-                            
+                        break                         
                     else:
                         clearscreen()
                         self.board.board_display()
@@ -115,6 +119,7 @@ class game:
                 
                     #! the except work if we enterd wrong input like letter or number not between (1-9)
                 except:
+                    
                     print("Invalid input. Please enter a number from 1 to 9")
 
             if self.win():
