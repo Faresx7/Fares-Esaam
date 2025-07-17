@@ -99,56 +99,54 @@ class game:
             self.quit()
 
     def play(self):
-        attempt=3
+        
         while True:
             turn = self.player[self.cplayer]
             self.board.board_display()
             print(f"{turn.name.capitalize()}'s turn\nEnter position")
-            #! this condition for check that the position is valid
-            # todo i need to make condition to make there is only 3 attempts in wrong position
+            #this is to make attempts for incorrect inputs
+            attempt = 3
+            valid_move = False
             
-            while True:
-                while attempt >0:
-                    try:
-                        pos = int(input())
-                        #! check this position available or not
-                        if self.board.update_board(pos, turn.symbol):
-                            #! if True we continue normally
-                            break                         
-                        else:
-                            clearscreen()
-                            self.board.board_display()
-                            print("Position already taken, choose another position")
-                
-                        #! the except work if we enterd wrong input like letter or number not between (1-9)
-                    except:
-                            print(f"Invalid input. Please enter a number from 1 to 9\nYou have {attempt} attempt left")
-                            attempt-=1
-                    if attempt==0:
-                        print("Restart game")
-                        self.restart()
-
-                    if self.win():
-                        clearscreen()
-                        self.board.board_display()
-                        print(f"{turn.name.capitalize()} wins! 🎉")
-                    if self.menu.end_game_menu()==1:
-                        self.restart()
+            while attempt > 0:
+                try:
+                    pos = int(input())
+                    if self.board.update_board(pos, turn.symbol):
+                        valid_move = True
+                        # out from input
+                        break
                     else:
-                        self.quit()
-                        break
-                    if self.draw():
+                        attempt -= 1
                         clearscreen()
                         self.board.board_display()
-                        print("Draw , No one wins")
-                        # self.menu.end_game_menu()
-                        if self.menu.end_game_menu()==1:
-                            self.restart()
-                        else:
-                            self.quit()
-                        break
+                        print(f"Position already taken. Attempts left: {attempt}")
+                except:
+                    attempt -= 1
+                    print(f"Invalid input. Please enter a number from 1 to 9. Attempts left: {attempt}")
+            if valid_move==False:
+                self.restart()
+
+            if self.win():
+                clearscreen()
+                self.board.board_display()
+                print(f"{turn.name.capitalize()} wins! 🎉")
+                if self.menu.end_game_menu() == 1:
+                    self.restart()
+                else:
+                    self.quit()
+
+            if self.draw():
+                clearscreen()
+                self.board.board_display()
+                print("Draw! No one wins.")
+                if self.menu.end_game_menu() == 1:
+                    self.restart()
+                else:
+                    self.quit()
+
             self.switch()
             clearscreen()
+
         
     def win(self):
         b=self.board.board
@@ -177,6 +175,7 @@ class game:
         exit()
     def restart(self):
         clearscreen()
+        print("--Game restarted--")
         self.board.reset()
         self.play()
     def switch(self):
